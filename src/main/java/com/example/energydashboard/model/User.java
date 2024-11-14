@@ -1,8 +1,11 @@
 package com.example.energydashboard.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 
@@ -16,20 +19,31 @@ public class User {
 
     private String username;
     private String email;
+    private String password;
+    @JsonFormat
+    @JdbcTypeCode(SqlTypes.JSON)
+    private EnergyMetrics energyConsumption;
+    @JsonFormat
+    @JdbcTypeCode(SqlTypes.JSON)
+    private EnergyMetrics energyGeneration;
+    @JsonFormat
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<ChartData> chartData;
 
-    @OneToMany(mappedBy = "user")
-    @JsonManagedReference  // Ensures proper serialization
-    @JsonIgnoreProperties("user") // Prevent circular references from being serialized
-    private List<EnergyData> energyData;
+    public User() {
+    }
+
+
 
     // Getters and setters
 
-    public Long getUserId() {
+
+    public Long getId() {
         return id;
     }
 
-    public void setUserId(Long userId) {
-        this.id = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -48,22 +62,36 @@ public class User {
         this.email = email;
     }
 
-    public List<EnergyData> getEnergyData() {
-        return energyData;
+    public String getPassword() {
+        return password;
     }
 
-    public void setEnergyData(List<EnergyData> energyData) {
-        this.energyData = energyData;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public User(Long id, String username, String email, List<EnergyData> energyData) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.energyData = energyData;
+    public EnergyMetrics getEnergyConsumption() {
+        return energyConsumption;
     }
 
-    public User() {
+    public void setEnergyConsumption(EnergyMetrics energyConsumption) {
+        this.energyConsumption = energyConsumption;
+    }
+
+    public EnergyMetrics getEnergyGeneration() {
+        return energyGeneration;
+    }
+
+    public void setEnergyGeneration(EnergyMetrics energyGeneration) {
+        this.energyGeneration = energyGeneration;
+    }
+
+    public List<ChartData> getChartData() {
+        return chartData;
+    }
+
+    public void setChartData(List<ChartData> chartData) {
+        this.chartData = chartData;
     }
 
     @Override
@@ -72,7 +100,10 @@ public class User {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", energyData=" + energyData +
+                ", password='" + password + '\'' +
+                ", energyConsumption=" + energyConsumption +
+                ", energyGeneration=" + energyGeneration +
+                ", chartData=" + chartData +
                 '}';
     }
 }
